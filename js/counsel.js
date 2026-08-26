@@ -8,6 +8,45 @@ const consultationListEmpty = document.querySelector('#consultation-list-empty')
 const API_URL = form ? form.getAttribute('action') : '';
 const CONSULTATION_CACHE_KEY = 'consultationListCache';
 const phoneInput = document.querySelector('input[name="phone"]');
+const countdownTimerEl = document.querySelector('#countdown-timer');
+
+// 매주 일요일 23:59:59 마감, 월요일 자동 재시작
+function getWeeklyDeadline() {
+    const now = new Date();
+    const day = now.getDay(); // 0=일, 1=월 ... 6=토
+    const daysUntilSunday = day === 0 ? 0 : 7 - day;
+    const deadline = new Date(now);
+    deadline.setDate(now.getDate() + daysUntilSunday);
+    deadline.setHours(23, 59, 59, 0);
+    return deadline;
+}
+
+function updateCountdown() {
+    if (!countdownTimerEl) {
+        return;
+    }
+
+    const diff = getWeeklyDeadline().getTime() - Date.now();
+
+    if (diff <= 0) {
+        countdownTimerEl.textContent = '00:00:00';
+        return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const dayText = days > 0 ? `${days}일 ` : '';
+    countdownTimerEl.textContent = `${dayText}${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
+if (countdownTimerEl) {
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+}
 
 function formatPhoneInput(value) {
     const digits = value.replace(/[^0-9]/g, '').slice(0, 11);
@@ -218,6 +257,53 @@ async function loadConsultationList() {
     }
 }
 
+const appModal = document.querySelector('#app-modal');
+const appModalIcon = document.querySelector('#app-modal-icon');
+const appModalTitle = document.querySelector('#app-modal-title');
+const appModalMessage = document.querySelector('#app-modal-message');
+const appModalConfirm = document.querySelector('#app-modal-confirm');
+
+function showModal({ icon, title, message, tone = 'default' }) {
+    if (!appModal) {
+        return;
+    }
+
+    if (appModalIcon) {
+        appModalIcon.textContent = icon;
+        appModalIcon.classList.toggle('modal-icon--warning', tone === 'warning');
+    }
+
+    if (appModalTitle) {
+        appModalTitle.textContent = title;
+    }
+
+    if (appModalMessage) {
+        appModalMessage.textContent = message;
+    }
+
+    appModal.hidden = false;
+}
+
+function hideModal() {
+    if (!appModal) {
+        return;
+    }
+
+    appModal.hidden = true;
+}
+
+if (appModalConfirm) {
+    appModalConfirm.addEventListener('click', hideModal);
+}
+
+if (appModal) {
+    appModal.addEventListener('click', (event) => {
+        if (event.target === appModal) {
+            hideModal();
+        }
+    });
+}
+
 let waitingForResponse = false;
 
 function submitConsultForm(event) {
@@ -231,12 +317,22 @@ function submitConsultForm(event) {
     formData.set('phone', phone);
 
     if (!name || !phone) {
-        alert('이름과 연락처를 입력해주세요.');
+        showModal({
+            icon: '⚠️',
+            title: '입력값을 확인해주세요',
+            message: '이름과 연락처를 입력해주세요.',
+            tone: 'warning',
+        });
         return;
     }
 
     if (!agree) {
-        alert('개인정보 수집 및 이용에 동의해주세요.');
+        showModal({
+            icon: '⚠️',
+            title: '약관 동의가 필요해요',
+            message: '개인정보 수집 및 이용에 동의해주세요.',
+            tone: 'warning',
+        });
         event.preventDefault();
         return;
     }
@@ -275,6 +371,10 @@ if (submitFrame) {
             submitButton.textContent = '상담 신청하기';
         }
 
-        alert('상담 신청이 완료되었습니다.');
+        showModal({
+            icon: '✅',
+            title: '상담 신청이 완료되었습니다!',
+            message: '빠른 시간 안에 상담원이 연락드리겠습니다.',
+        });
     });
 }

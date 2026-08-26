@@ -14,13 +14,18 @@
     <input class="choice-switch" type="radio" name="choice" id="choice-full" value="전체 임플란트">
 
     <main class="page">
+        <a class="back-btn" href="../index.html">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M15 18l-6-6 6-6" />
+            </svg>
+            <span>뒤로 가기</span>
+        </a>
+
         <section class="hero">
-            <a class="back-btn" href="../index.html">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M15 18l-6-6 6-6" />
-                </svg>
-                <span>뒤로 가기</span>
-            </a>
+            <div class="countdown-wrap">
+                <span>⏰ 마감까지</span>
+                <span class="countdown-timer" id="countdown-timer">계산 중...</span>
+            </div>
 
             <div class="hero__top">
                 <!-- <p class="eyebrow">클릭한 내용이 상단에 표시됩니다</p> -->
@@ -56,8 +61,11 @@
         </section>
 
         <section class="form-section">
+            <div class="eyebrow-wrap">
+                <p class="eyebrow">📝 상담 입력</p>
+            </div>
+
             <div class="section-heading">
-                <p class="eyebrow">상담 입력</p>
                 <h2>연락처를 남겨주세요</h2>
                 <p>상담원이 맞춤 상담을 도와드립니다.</p>
             </div>
@@ -68,17 +76,30 @@
                 <input type="hidden" id="selected-type" name="selectedType" value="국산 정품 임플란트">
                 <label class="field">
                     <span>이름</span>
-                    <input type="text" name="name" placeholder="이름을 입력하세요" maxlength="4" required>
+                    <div class="input-icon">
+                        <svg class="input-icon__svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <circle cx="12" cy="8" r="4" />
+                            <path d="M4 20c0-4.2 3.6-7 8-7s8 2.8 8 7" />
+                        </svg>
+                        <input type="text" name="name" placeholder="이름을 입력하세요" maxlength="4" autocomplete="off" required>
+                    </div>
                 </label>
 
                 <label class="field">
                     <span>연락처</span>
-                    <input type="tel" name="phone" placeholder="연락처를 입력하세요" maxlength="13" required>
+                    <div class="input-icon">
+                        <svg class="input-icon__svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M6.5 3h3l1.5 4.5-2 1.5a12 12 0 0 0 6 6l1.5-2 4.5 1.5v3a2 2 0 0 1-2 2c-8 0-14.5-6.5-14.5-14.5a2 2 0 0 1 2-2Z" />
+                        </svg>
+                        <input type="tel" name="phone" placeholder="연락처를 입력하세요" maxlength="13" autocomplete="off" required>
+                    </div>
                 </label>
 
                 <label class="check-field">
                     <input type="checkbox" name="agree" required>
-                    <span>[필수] 개인정보 수집 및 이용에 동의합니다.</span>
+                    <span>[필수] 개인정보 수집 및 이용에 동의합니다.
+                        <a class="agree-detail-link" href="https://knockknockplant.co.kr/access.php" target="_blank" rel="noopener noreferrer">자세히 보기</a>
+                    </span>
                 </label>
 
                 <button class="btn" type="submit">상담 신청하기</button>
@@ -87,7 +108,7 @@
         </section>
 
         <section class="recent-applicants" aria-label="실시간 상담 신청 현황">
-            <h2 class="recent-applicants-title">실시간 상담 신청 현황</h2>
+            <h2 class="recent-applicants-title">🔥 실시간 상담 신청 현황 🔥</h2>
 
             <div class="recent-applicants-head">
                 <div>접수일</div>
@@ -102,6 +123,15 @@
             <p class="recent-applicants-empty" id="consultation-list-empty" hidden>아직 상담 신청 내역이 없습니다.</p>
         </section>
     </main>
+
+    <div class="modal-overlay" id="app-modal" hidden>
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="app-modal-title">
+            <div class="modal-icon" id="app-modal-icon">✅</div>
+            <h3 id="app-modal-title">상담 신청이 완료되었습니다!</h3>
+            <p id="app-modal-message">빠른 시간 안에 상담원이 연락드리겠습니다.</p>
+            <button type="button" class="btn" id="app-modal-confirm">확인</button>
+        </div>
+    </div>
 
     <script src="../js/counsel.js"></script>
 </body>
