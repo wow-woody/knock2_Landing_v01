@@ -1,0 +1,8 @@
+const consultButton = document.querySelector('.btn');
+
+if (consultButton) {
+    consultButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.href = './sub-page/counsel.html';
+    });
+}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/index.css">
+
+
+    <title>PHP 테스트</title>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="top_text">
+            <div>
+                <p>이달의 파격특가</p>
+            </div>
+            <div>
+                <p>마감까지 5일 남음</p>
+            </div>
+            <div>
+                <p>임플란트 파격할인</p>
+            </div>
+        </div>
+        <ul class="item-card">
+            <li><a href="#">국산임플란트</a></li>
+            <li><a href="#">전체임플란트</a></li>
+        </ul>
+        <a href="./sub-page/counsel.html" class="btn">
+            <p>무료 상담 신청</p>
+        </a>
+    </div>
+
+    <script src="js/index.js"></script>
+</body>
+
+</html>
