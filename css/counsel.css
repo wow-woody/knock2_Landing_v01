@@ -163,11 +163,20 @@ textarea {
     border-radius: 999px;
 }
 
-.hero__title,
-.section-heading h2 {
+.hero__title {
     margin: 0;
+    font-weight: 600;
     letter-spacing: -0.04em;
     line-height: 1.15;
+    color: var(--primary);
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1.15;
+    color: var(--primary);
 }
 
 .hero__title--default,
@@ -175,7 +184,7 @@ textarea {
 .hero__title--osstem,
 .hero__title--full {
     display: none;
-    font-size: 2.3rem;
+    font-size: 2.1rem;
 }
 
 .hero__desc {
@@ -200,7 +209,8 @@ textarea {
 
 .choice-card {
     display: grid;
-    gap: 8px;
+    text-align: center;
+    gap: 4px;
     padding: 18px;
     border: 1px solid var(--line);
     border-radius: 20px;
@@ -235,7 +245,7 @@ textarea {
 }
 
 .section-heading h2 {
-    font-size: 1.8rem;
+    font-size: 2.1rem;
 }
 
 .section-heading p {
@@ -666,7 +676,7 @@ textarea {
     .hero__title--korean,
     .hero__title--osstem,
     .hero__title--full {
-        font-size: 1.9rem;
+        font-size: 2.1rem;
     }
 
     .recent-applicants-head,
