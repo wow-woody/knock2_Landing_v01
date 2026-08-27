@@ -2,6 +2,14 @@
 <html lang="ko">
 
 <head>
+    <!-- Google Tag Manager: GTM-XXXXXXX는 실제 발급받은 컨테이너 ID로 교체 필요 -->
+    <!-- ※ PHP로 합칠 때 주의: index.html과 counsel.html 둘 다 이 head 스크립트를 갖고 있음. 합친 파일에는 이 블록을 딱 1개만 남기고 나머지 하나는 삭제할 것 (중복 삽입 시 GTM 이벤트가 중복 집계됨) -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상담 신청</title>
@@ -9,6 +17,11 @@
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript): 위 head 코드와 같은 GTM ID로 교체 필요 -->
+    <!-- ※ PHP로 합칠 때 주의: 이 noscript 블록도 두 파일에 각 1개씩 있음. 합친 파일에는 body 시작 직후에 딱 1개만 남길 것 -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <input class="choice-switch" type="radio" name="choice" id="choice-korean" value="국산 정품 임플란트" checked>
     <input class="choice-switch" type="radio" name="choice" id="choice-osstem" value="오스템 임플란트">
     <input class="choice-switch" type="radio" name="choice" id="choice-full" value="전체 임플란트">
@@ -71,7 +84,7 @@
             </div>
 
             <form class="consult-form" id="consult-form"
-                action="https://script.google.com/macros/s/AKfycbx0mKjxoVZ-qCmZsYD9ph71A4DLdoABSOCd628fzA_cav__-YZ7tkmWraVvq4WSGk5h/exec"
+                action="https://script.google.com/macros/s/AKfycbwekTfWOP5BzuHG-5dfKKtad-gy1PG6TqqGqI10t3tHPfe-crVULlEVMlpmHWknKm41/exec"
                 method="post" target="submit-frame">
                 <input type="hidden" id="selected-type" name="selectedType" value="국산 정품 임플란트">
                 <label class="field">

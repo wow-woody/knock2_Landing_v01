@@ -1,6 +1,8 @@
 const SPREADSHEET_ID = '1QwhPEF5vb5rEoyZffDXEXLG1G78L5kIWe4-UBHmg7NI';
 const RECENT_APPLICANTS_CACHE_KEY = 'recent_applicants';
 const RECENT_APPLICANTS_CACHE_TTL_SECONDS = 60;
+// 정상 저장(락 실패, 시트 없음, 기타 에러)에 실패했을 때 신청 데이터를 잃지 않도록 백업해두는 시트
+const FALLBACK_SHEET_NAME = 'DB로스';
 
 function parseRequestData(e) {
     const parameterData = e && e.parameter ? e.parameter : {};
@@ -14,22 +16,53 @@ function parseRequestData(e) {
     return merged;
 }
 
+function getOrCreateFallbackSheet(spreadsheet) {
+    let sheet = spreadsheet.getSheetByName(FALLBACK_SHEET_NAME);
+
+    if (!sheet) {
+        sheet = spreadsheet.insertSheet(FALLBACK_SHEET_NAME);
+    }
+
+    if (sheet.getLastRow() === 0) {
+        sheet.appendRow(['timestamp', 'name', 'phone', '상담유형', '유실사유']);
+    }
+
+    return sheet;
+}
+
+// 정상 저장 경로가 실패했을 때 최후의 수단으로 호출. 이 함수마저 실패하면 콘솔 로그만 남기고 넘어간다.
+function logToFallbackSheet(spreadsheet, name, phone, selectedType, reason) {
+    try {
+        const fallbackSheet = getOrCreateFallbackSheet(spreadsheet);
+        fallbackSheet.appendRow([new Date(), name, phone, selectedType, reason]);
+    } catch (fallbackError) {
+        console.error('fallback_log_error', fallbackError);
+    }
+}
+
 function doPost(e) {
     const lock = LockService.getScriptLock();
     const lockAcquired = lock.tryLock(30000);
 
+    const data = parseRequestData(e);
+    const name = String(data.name || '').trim();
+    const phone = String(data.phone || '').trim();
+    const selectedType = String(data.selectedType || '').trim() || '국산 정품 임플란트';
+
     if (!lockAcquired) {
+        // 락을 못 잡아 정상 저장 경로를 탈 수 없는 경우에도 신청 데이터 자체는 잃지 않도록 백업
+        if (name && phone) {
+            try {
+                const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+                logToFallbackSheet(spreadsheet, name, phone, selectedType, 'lock_failed');
+            } catch (openError) {
+                console.error('lock_failed_fallback_error', openError);
+            }
+        }
         return ContentService.createTextOutput('lock_failed');
     }
 
     try {
-        const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
-
-        const data = parseRequestData(e);
-        const name = String(data.name || '').trim();
-        const phone = String(data.phone || '').trim();
-        const selectedType = String(data.selectedType || '').trim() || '국산 정품 임플란트';
-
         if (!name || !phone) {
             console.log(
                 'missing_fields',
@@ -41,11 +74,14 @@ function doPost(e) {
             return ContentService.createTextOutput('missing_fields');
         }
 
+        const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
         const sheet = spreadsheet.getSheetByName(selectedType);
 
         if (!sheet) {
             const availableSheetNames = spreadsheet.getSheets().map((s) => s.getName());
             console.error('sheet_not_found', selectedType, availableSheetNames);
+            // 상담 유형에 맞는 시트 탭이 없어도 신청 데이터는 DB로스 시트에 남겨 유실을 막는다
+            logToFallbackSheet(spreadsheet, name, phone, selectedType, 'sheet_not_found');
             return ContentService.createTextOutput(
                 'sheet_not_found: requested="' + selectedType + '" available=' + JSON.stringify(availableSheetNames),
             );
@@ -61,6 +97,15 @@ function doPost(e) {
         return ContentService.createTextOutput('success');
     } catch (error) {
         console.error('submit_error', error);
+        // 예상치 못한 에러로 정상 저장이 실패해도 신청 데이터는 DB로스 시트에 남긴다
+        if (name && phone) {
+            try {
+                const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+                logToFallbackSheet(spreadsheet, name, phone, selectedType, 'error: ' + error.message);
+            } catch (openError) {
+                console.error('fallback_open_error', openError);
+            }
+        }
         return ContentService.createTextOutput('error');
     } finally {
         if (lockAcquired) {
@@ -84,6 +129,11 @@ function doGet() {
     let items = [];
 
     sheets.forEach((sheet) => {
+        // DB로스 시트는 유실 백업용이라 신청 목록 화면에는 노출하지 않는다
+        if (sheet.getName() === FALLBACK_SHEET_NAME) {
+            return;
+        }
+
         const lastRow = sheet.getLastRow();
         if (lastRow < 2) {
             return;
