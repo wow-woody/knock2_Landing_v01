@@ -109,11 +109,14 @@
                 </label>
 
                 <label class="check-field">
-                    <input type="checkbox" name="agree" required>
+                    <input type="checkbox" name="agree" required checked>
                     <span>[필수] 개인정보 수집 및 이용에 동의합니다.
                         <a class="agree-detail-link" href="https://knockknockplant.co.kr/access.php" target="_blank" rel="noopener noreferrer">자세히 보기</a>
                     </span>
                 </label>
+
+                <!-- 임시 테스트용 버튼: 주소 끝에 ?test=1 붙였을 때만 노출됨. DB로스 유실 테스트 끝나면 이 블록과 counsel.js의 관련 코드 삭제할 것 -->
+                <button type="button" id="debug-force-fail-btn" class="btn" style="display:none; background:#666; margin-bottom:10px;">🧪 일부러 실패시키기 (테스트용)</button>
 
                 <button class="btn" type="submit">상담 신청하기</button>
             </form>

@@ -22,7 +22,6 @@ html {
 
 body {
     margin: 0;
-    min-width: 641px;
     font-family: 'Pretendard', sans-serif;
     color: var(--text);
     background:
@@ -648,5 +647,30 @@ textarea {
 
     .section-heading {
         text-align: center;
+    }
+}
+
+/* 아이폰 14 Pro(393px) 등 좁은 폰 화면 대응 */
+@media (max-width: 400px) {
+    .page {
+        padding: 14px 12px 32px;
+    }
+
+    .hero,
+    .form-section,
+    .recent-applicants {
+        padding: 16px;
+    }
+
+    .hero__title--default,
+    .hero__title--korean,
+    .hero__title--osstem,
+    .hero__title--full {
+        font-size: 1.9rem;
+    }
+
+    .recent-applicants-head,
+    .recent-applicants-row {
+        font-size: 0.74rem;
     }
 }

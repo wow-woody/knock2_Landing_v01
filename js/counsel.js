@@ -378,3 +378,18 @@ if (submitFrame) {
         });
     });
 }
+
+// 임시 테스트 코드: DB로스 유실 테스트용. 테스트 끝나면 이 블록과 counsel.html의 #debug-force-fail-btn 삭제할 것
+const debugForceFailBtn = document.querySelector('#debug-force-fail-btn');
+
+if (debugForceFailBtn && new URLSearchParams(window.location.search).get('test') === '1') {
+    debugForceFailBtn.style.display = 'inline-flex';
+
+    debugForceFailBtn.addEventListener('click', () => {
+        if (selectedTypeInput) {
+            selectedTypeInput.value = '존재하지않는시트_모바일테스트';
+        }
+
+        debugForceFailBtn.textContent = '✅ 실패 유형 적용됨 (이제 신청하기 누르세요)';
+    });
+}
