@@ -48,6 +48,8 @@ function doPost(e) {
     const name = String(data.name || '').trim();
     const phone = String(data.phone || '').trim();
     const selectedType = String(data.selectedType || '').trim() || '국산 정품 임플란트';
+    // 임시 테스트 신호: 프론트엔드 테스트 버튼이 켜면 실제 상담유형은 그대로 두고 저장만 강제로 실패시킨다. 테스트 끝나면 이 필드 관련 코드 전부 삭제할 것
+    const forceFail = String(data.forceFail || '') === '1';
 
     if (!lockAcquired) {
         // 락을 못 잡아 정상 저장 경로를 탈 수 없는 경우에도 신청 데이터 자체는 잃지 않도록 백업
@@ -75,6 +77,13 @@ function doPost(e) {
         }
 
         const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+
+        if (forceFail) {
+            // 실제 선택한 상담유형(selectedType)은 그대로 두고 정상 저장만 건너뛰어 유실 상황을 재현한다
+            logToFallbackSheet(spreadsheet, name, phone, selectedType, 'test_forced_failure');
+            return ContentService.createTextOutput('test_forced_failure');
+        }
+
         const sheet = spreadsheet.getSheetByName(selectedType);
 
         if (!sheet) {
