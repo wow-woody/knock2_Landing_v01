@@ -371,6 +371,9 @@ if (submitFrame) {
             submitButton.textContent = '상담 신청하기';
         }
 
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({ event: 'form_submit_success' });
+
         showModal({
             icon: '✅',
             title: '상담 신청이 완료되었습니다!',

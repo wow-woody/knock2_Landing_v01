@@ -40,7 +40,7 @@
 }
 .main_img > a:hover {
     background: #fff8f2;
-    color: #EF512C;
+    color: #1147ad;
 }
 
 .main_img > a::after {
@@ -53,9 +53,9 @@
     background: linear-gradient(
         105deg,
         transparent 0%,
-        rgba(239, 81, 44, 0) 25%,
-        rgba(239, 81, 44, 0.16) 50%,
-        rgba(239, 81, 44, 0) 75%,
+        rgba(17, 71, 173, 0) 25%,
+        rgba(17, 71, 173, 0.16) 50%,
+        rgba(17, 71, 173, 0) 75%,
         transparent 100%
     );
     animation: main-btn-shine 5s ease-in-out infinite;

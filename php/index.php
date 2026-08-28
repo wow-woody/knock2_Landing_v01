@@ -94,7 +94,7 @@
 
         .main_img>a:hover {
             background: #fff8f2;
-            color: #EF512C;
+            color: #1147ad;
         }
 
         .main_img>a::after {
@@ -106,9 +106,9 @@
             height: 100%;
             background: linear-gradient(105deg,
                     transparent 0%,
-                    rgba(239, 81, 44, 0) 25%,
-                    rgba(239, 81, 44, 0.16) 50%,
-                    rgba(239, 81, 44, 0) 75%,
+                    rgba(17, 71, 173, 0) 25%,
+                    rgba(17, 71, 173, 0.16) 50%,
+                    rgba(17, 71, 173, 0) 75%,
                     transparent 100%);
             animation: main-btn-shine 5s ease-in-out infinite;
         }
@@ -829,7 +829,8 @@
     <div id="view-index" class="view">
         <div class="container">
             <div class="main_img">
-                <p><img src="http://knockknockplant.co.kr/landing/00-test/randing_o_20.gif" alt="오스템 메인이미지"></p>
+                <p><img src="http://knockknockplant.co.kr/landing/00-test/randing_ko_20.gif
+" alt="오스템 메인이미지"></p>
                 <a href="#counsel" id="go-counsel-btn" class="btn">
                     <p>무료 상담 신청</p>
                 </a>
@@ -1345,6 +1346,9 @@
                     submitButton.disabled = false;
                     submitButton.textContent = '상담 신청하기';
                 }
+
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({ event: 'form_submit_success' });
 
                 showModal({
                     icon: '✅',
