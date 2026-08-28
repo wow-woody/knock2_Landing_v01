@@ -979,7 +979,29 @@
         const API_URL = form ? form.getAttribute('action') : '';
         const CONSULTATION_CACHE_KEY = 'consultationListCache';
         const phoneInput = document.querySelector('input[name="phone"]');
+        const nameInput = document.querySelector('input[name="name"]');
         const countdownTimerEl = document.querySelector('#countdown-timer');
+
+        // ==== 이름 인풋 금지 단어 목록 (여기에 단어를 추가/삭제하세요) ====
+        const FORBIDDEN_NAME_WORDS = [
+            '시발',
+            'ㅅㅂ',
+            'ㅂㅅ',
+            'ㅄ',
+            '병신',
+            '시브랄',
+            '살인자',
+            '돌팔이',
+            '돌아이',
+            '미친',
+            '미친놈',
+            '미친년',
+        ];
+
+        function containsForbiddenWord(value) {
+            const normalized = String(value || '').toLowerCase();
+            return FORBIDDEN_NAME_WORDS.some((word) => word && normalized.includes(word.toLowerCase()));
+        }
 
         // 매주 일요일 23:59:59 마감, 월요일 자동 재시작
         function getWeeklyDeadline() {
@@ -1019,8 +1041,32 @@
             setInterval(updateCountdown, 1000);
         }
 
+        // 허용하는 지역번호/통신사 번호 (앞 2~3자리)
+        const ALLOWED_PHONE_PREFIXES = [
+            '02',
+            '031', '032', '033',
+            '041', '042', '043', '044',
+            '051', '052', '054', '055',
+            '061', '062', '063', '064',
+            '010', '011', '016', '017', '018', '019',
+        ];
+
+        function isAllowedPhonePrefix(prefixDigits) {
+            return ALLOWED_PHONE_PREFIXES.some(
+                (code) => code.startsWith(prefixDigits) || prefixDigits.startsWith(code),
+            );
+        }
+
         function formatPhoneInput(value) {
-            const digits = value.replace(/[^0-9]/g, '').slice(0, 11);
+            const rawDigits = value.replace(/[^0-9]/g, '').slice(0, 11);
+            let digits = '';
+
+            for (const digit of rawDigits) {
+                if (digits.length < 3 && !isAllowedPhonePrefix(digits + digit)) {
+                    break;
+                }
+                digits += digit;
+            }
 
             if (digits.length < 4) {
                 return digits;
@@ -1036,6 +1082,12 @@
         if (phoneInput) {
             phoneInput.addEventListener('input', () => {
                 phoneInput.value = formatPhoneInput(phoneInput.value);
+            });
+        }
+
+        if (nameInput) {
+            nameInput.addEventListener('input', () => {
+                nameInput.value = nameInput.value.replace(/[0-9]/g, '');
             });
         }
 
@@ -1299,6 +1351,17 @@
                     message: '이름과 연락처를 입력해주세요.',
                     tone: 'warning',
                 });
+                return;
+            }
+
+            if (containsForbiddenWord(name)) {
+                showModal({
+                    icon: '⚠️',
+                    title: '이름을 확인해주세요',
+                    message: '이름에 사용할 수 없는 단어가 포함되어 있습니다.',
+                    tone: 'warning',
+                });
+                event.preventDefault();
                 return;
             }
 
