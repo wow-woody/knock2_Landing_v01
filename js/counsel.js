@@ -97,15 +97,20 @@ function formatPhoneInput(value) {
         digits += digit;
     }
 
-    if (digits.length < 4) {
+    // 서울(02)은 지역번호가 2자리라 나머지 지역번호/휴대폰(3자리)와 분리해서 처리
+    const isSeoul = digits.startsWith('02');
+    const prefixLength = isSeoul ? 2 : 3;
+    digits = isSeoul ? digits.slice(0, 10) : digits;
+
+    if (digits.length <= prefixLength) {
         return digits;
     }
 
-    if (digits.length < 8) {
-        return `${digits.slice(0, 3)}-${digits.slice(3)}`;
+    if (digits.length <= prefixLength + 4) {
+        return `${digits.slice(0, prefixLength)}-${digits.slice(prefixLength)}`;
     }
 
-    return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`;
+    return `${digits.slice(0, prefixLength)}-${digits.slice(prefixLength, prefixLength + 4)}-${digits.slice(prefixLength + 4)}`;
 }
 
 if (phoneInput) {
