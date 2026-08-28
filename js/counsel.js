@@ -10,8 +10,31 @@ const CONSULTATION_CACHE_KEY = 'consultationListCache';
 const phoneInput = document.querySelector('input[name="phone"]');
 const nameInput = document.querySelector('input[name="name"]');
 const countdownTimerEl = document.querySelector('#countdown-timer');
+const clientIpInput = document.querySelector('#client-ip');
+
+// 서버에서 같은 IP의 5분 이내 재신청을 막을 수 있도록 공인 IP를 미리 조회해둔다
+if (clientIpInput) {
+    fetch('https://api.ipify.org?format=json')
+        .then((response) => response.json())
+        .then((data) => {
+            clientIpInput.value = data.ip || '';
+        })
+        .catch(() => {
+            // 조회 실패 시 빈 값으로 두면 서버는 해당 신청에 IP 제한을 적용하지 않는다
+        });
+}
 
 // ==== 이름 인풋 금지 단어 목록 (여기에 단어를 추가/삭제하세요) ====
+// 짧고 애매한 글자(정상 이름에도 들어갈 수 있는 글자)는 이름 전체와 정확히 같을 때만 차단
+const FORBIDDEN_NAME_EXACT_WORDS = [
+    '개',
+    '돌',
+    '좆',
+    '좃',
+    '샹',
+];
+
+// 명확한 욕설/조합 단어는 이름에 포함되어 있으면 차단
 const FORBIDDEN_NAME_WORDS = [
     '시발',
     'ㅅㅂ',
@@ -25,11 +48,21 @@ const FORBIDDEN_NAME_WORDS = [
     '미친',
     '미친놈',
     '미친년',
+    '개새',
+    '개새끼',
+    '사기',
+    '사기꾼',
+    '돌팔',
+    '썅놈',
+    '싸가지',
+    '좆까',
 ];
 
 function containsForbiddenWord(value) {
-    const normalized = String(value || '').toLowerCase();
-    return FORBIDDEN_NAME_WORDS.some((word) => word && normalized.includes(word.toLowerCase()));
+    const normalized = String(value || '').trim().toLowerCase();
+    const isExactMatch = FORBIDDEN_NAME_EXACT_WORDS.some((word) => word && normalized === word.toLowerCase());
+    const isSubstringMatch = FORBIDDEN_NAME_WORDS.some((word) => word && normalized.includes(word.toLowerCase()));
+    return isExactMatch || isSubstringMatch;
 }
 
 // 매주 일요일 23:59:59 마감, 월요일 자동 재시작
@@ -77,7 +110,7 @@ const ALLOWED_PHONE_PREFIXES = [
     '041', '042', '043', '044',
     '051', '052', '054', '055',
     '061', '062', '063', '064',
-    '010', '011', '016', '017', '018', '019',
+    '010',
 ];
 
 function isAllowedPhonePrefix(prefixDigits) {
@@ -127,6 +160,30 @@ if (nameInput) {
 
 function normalizePhone(value) {
     return value.replace(/[^0-9]/g, '');
+}
+
+// 장난번호(예: 010-4444-4444, 010-1234-5678) 차단
+function isSuspiciousPhoneNumber(phone) {
+    if (phone.length < 8) {
+        return false;
+    }
+
+    const last8 = phone.slice(-8);
+    const firstHalf = last8.slice(0, 4);
+    const secondHalf = last8.slice(4);
+
+    // 뒤 4자리가 그대로 반복되는 패턴 (4444-4444, 1234-1234 등)
+    if (firstHalf === secondHalf) {
+        return true;
+    }
+
+    // 순차 증가/감소 패턴 (1234-5678, 8765-4321 등)
+    const SEQUENTIAL_PATTERNS = [
+        '01234567', '12345678', '23456789',
+        '98765432', '87654321', '76543210',
+    ];
+
+    return SEQUENTIAL_PATTERNS.includes(last8);
 }
 
 function syncSelectedType() {
@@ -364,6 +421,11 @@ if (appModal) {
 let waitingForResponse = false;
 
 function submitConsultForm(event) {
+    if (waitingForResponse) {
+        event.preventDefault();
+        return;
+    }
+
     const formData = new FormData(form);
     const name = String(formData.get('name') || '').trim();
     const phone = normalizePhone(String(formData.get('phone') || '').trim());
@@ -380,6 +442,17 @@ function submitConsultForm(event) {
             message: '이름과 연락처를 입력해주세요.',
             tone: 'warning',
         });
+        return;
+    }
+
+    if (isSuspiciousPhoneNumber(phone)) {
+        showModal({
+            icon: '⚠️',
+            title: '연락처를 확인해주세요',
+            message: '올바른 연락처를 입력해주세요.',
+            tone: 'warning',
+        });
+        event.preventDefault();
         return;
     }
 

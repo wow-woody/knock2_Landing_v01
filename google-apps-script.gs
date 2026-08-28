@@ -1,6 +1,8 @@
 const SPREADSHEET_ID = '1QwhPEF5vb5rEoyZffDXEXLG1G78L5kIWe4-UBHmg7NI';
 const RECENT_APPLICANTS_CACHE_KEY = 'recent_applicants';
 const RECENT_APPLICANTS_CACHE_TTL_SECONDS = 60;
+// 같은 IP가 이 시간(초) 이내에 재신청하면 막는다
+const RATE_LIMIT_SECONDS = 300;
 // 정상 저장(락 실패, 시트 없음, 기타 에러)에 실패했을 때 신청 데이터를 잃지 않도록 백업해두는 시트
 const FALLBACK_SHEET_NAME = 'DB로스';
 // 상담유형(국산 정품 임플란트/오스템 임플란트/전체 임플란트)과 상관없이 모든 신청을 한곳에 모아두는 시트
@@ -60,15 +62,28 @@ function logToFallbackSheet(spreadsheet, name, phone, selectedType, reason) {
 }
 
 function doPost(e) {
-    const lock = LockService.getScriptLock();
-    const lockAcquired = lock.tryLock(30000);
-
     const data = parseRequestData(e);
     const name = String(data.name || '').trim();
     const phone = String(data.phone || '').trim();
     const selectedType = String(data.selectedType || '').trim() || '국산 정품 임플란트';
+    const clientIp = String(data.ip || '').trim();
     // 임시 테스트 신호: 프론트엔드 테스트 버튼이 켜면 실제 상담유형은 그대로 두고 저장만 강제로 실패시킨다. 테스트 끝나면 이 필드 관련 코드 전부 삭제할 것
     const forceFail = String(data.forceFail || '') === '1';
+
+    // 같은 IP는 RATE_LIMIT_SECONDS 이내 재신청 차단 (클라이언트가 보낸 IP라 완전한 서버 검증은 아니고 연타 방지 목적)
+    if (clientIp) {
+        const rateLimitCache = CacheService.getScriptCache();
+        const rateLimitKey = 'submit_ip_' + clientIp;
+
+        if (rateLimitCache.get(rateLimitKey)) {
+            return ContentService.createTextOutput('rate_limited');
+        }
+
+        rateLimitCache.put(rateLimitKey, '1', RATE_LIMIT_SECONDS);
+    }
+
+    const lock = LockService.getScriptLock();
+    const lockAcquired = lock.tryLock(30000);
 
     if (!lockAcquired) {
         // 락을 못 잡아 정상 저장 경로를 탈 수 없는 경우에도 신청 데이터 자체는 잃지 않도록 백업
