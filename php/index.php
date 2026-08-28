@@ -901,7 +901,7 @@
                 </div>
 
                 <form class="consult-form" id="consult-form"
-                    action="https://script.google.com/macros/s/AKfycbwUM87HB0I04HQ8mjr6sahP6u_K_Q80URJrvtOB8IX0xJWX0SkpTYRwg3nB2jvkCg6Q/exec"
+                    action="https://script.google.com/macros/s/AKfycbzSxL_uOmhGY0CS6zIjO2fj58kWNzNv4iEj9mg38bsQ7nlxb6tGOc1S3fFF5m9sUIH0/exec"
                     method="post" target="submit-frame">
                     <input type="hidden" id="selected-type" name="selectedType" value="국산 정품 임플란트">
                     <input type="hidden" id="force-fail-flag" name="forceFail" value="0">
@@ -944,7 +944,7 @@
                 <h2 class="recent-applicants-title">🔥 실시간 상담 신청 현황 🔥</h2>
 
                 <div class="recent-applicants-head">
-                    <div>접수일</div>
+                    <div>신청시간</div>
                     <div>이름</div>
                     <div>연락처</div>
                 </div>
@@ -1348,7 +1348,9 @@
                 }
 
                 window.dataLayer = window.dataLayer || [];
-                window.dataLayer.push({ event: 'form_submit_success' });
+                window.dataLayer.push({
+                    event: 'form_submit_success'
+                });
 
                 showModal({
                     icon: '✅',
@@ -1358,7 +1360,7 @@
             });
         }
 
-        // 임시 테스트 코드: DB로스 유실 테스트용. 테스트 끝나면 이 블록과 counsel.html의 #debug-force-fail-btn, #force-fail-flag 삭제할 것
+        // 임시 테스트 코드: DB로스 유실 테스트용. 테스트 끝나면 이 블록과 현재 페이지의 #debug-force-fail-btn, #force-fail-flag 삭제할 것
         const debugForceFailBtn = document.querySelector('#debug-force-fail-btn');
         const forceFailFlagInput = document.querySelector('#force-fail-flag');
 
