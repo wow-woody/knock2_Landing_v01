@@ -35,6 +35,15 @@
             list-style: none;
         }
 
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 0;
+        }
+
         a {
             text-decoration: none;
             color: inherit;
@@ -135,7 +144,7 @@
             --muted: #6b7280;
             --primary: #3182f6;
             --primary-strong: #1b64da;
-            --line: #dde6f7;
+            --line: #aac2ee;
             --shadow: 0 18px 45px rgba(49, 130, 246, 0.14);
         }
 
@@ -302,6 +311,10 @@
             color: var(--primary);
         }
 
+        .choice-heading {
+            margin-top: 16px;
+        }
+
         .hero__title--default,
         .hero__title--korean,
         .hero__title--osstem,
@@ -342,7 +355,7 @@
             text-align: center;
             gap: 4px;
             padding: 18px;
-            border: 1px solid var(--line);
+            border: 2px solid var(--line);
             border-radius: 20px;
             background: #fff;
             cursor: pointer;
@@ -358,7 +371,7 @@
         }
 
         .choice-card__title {
-            font-size: 0.88rem;
+            font-size: 0.983rem;
             font-weight: 800;
         }
 
@@ -446,7 +459,7 @@
         }
 
         .agree-panel {
-            background: rgba(107, 114, 128, 0.08);
+            background: rgba(168, 190, 231, 0.08);
             border-radius: 12px;
             overflow: hidden;
         }
@@ -768,6 +781,12 @@
             box-shadow: 0 10px 22px rgba(49, 130, 246, 0.12);
         }
 
+        #choice-korean:checked~.page .choice-list label[for='choice-korean'] .choice-card__title,
+        #choice-osstem:checked~.page .choice-list label[for='choice-osstem'] .choice-card__title,
+        #choice-full:checked~.page .choice-list label[for='choice-full'] .choice-card__title {
+            color: var(--primary);
+        }
+
         @media (max-width: 640px) {
             .page {
                 padding: 16px 14px 36px;
@@ -888,27 +907,20 @@
                 </div>
 
                 <div class="hero__top">
-                    <h1 class="hero__title hero__title--default">무료 상담 신청</h1>
-                    <p class="hero__desc hero__desc--default">아래 항목을 클릭하면 상단 문구가 바뀌고, 원하는 상담 내용을 선택할 수 있습니다.</p>
+                    <h1 class="hero__title hero__title--default">국산 정품 임플란트 개당 20만 원</h1>
+                    <p class="hero__desc hero__desc--default">뼈이식ㆍ 맞춤 지대주ㆍ지르코니아 보철 포함</p>
 
-                    <div class="hero__title hero__title--korean">국산 정품 임플란트 상담</div>
-                    <p class="hero__desc hero__desc--korean">국산 정품 임플란트 상담을 원하시면 아래 정보를 입력해주세요.</p>
-
-                    <div class="hero__title hero__title--osstem">오스템 임플란트 상담</div>
-                    <p class="hero__desc hero__desc--osstem">오스템 임플란트 상담을 원하시면 아래 정보를 입력해주세요.</p>
-
-                    <div class="hero__title hero__title--full">전체 임플란트 상담</div>
-                    <p class="hero__desc hero__desc--full">전체 임플란트 상담을 원하시면 아래 정보를 입력해주세요.</p>
+                    <h2 class="hero__title choice-heading">원하시는 항목을 선택해 주세요</h2>
                 </div>
 
                 <div class="choice-list" aria-label="상담 종류 선택">
                     <label class="choice-card" for="choice-korean">
-                        <span class="choice-card__title">국산 정품 임플란트</span>
+                        <span class="choice-card__title">1개~2개 임플란트</span>
                         <span class="choice-card__text">신청하기</span>
                     </label>
 
                     <label class="choice-card" for="choice-osstem">
-                        <span class="choice-card__title">오스템 임플란트</span>
+                        <span class="choice-card__title">여러 개 임플란트</span>
                         <span class="choice-card__text">신청하기</span>
                     </label>
 

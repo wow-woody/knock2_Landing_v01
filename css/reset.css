@@ -10,6 +10,11 @@ ol, ul {
   list-style: none;
 }
 
+/* 헤딩 기본 마진 제거 */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
 /* 링크 밑줄 및 색상 초기화 */
 a {
   text-decoration: none;
