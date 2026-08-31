@@ -197,9 +197,10 @@
 
         .countdown-timer {
             display: inline-block;
-            min-width: 76px;
+            min-width: 108px;
             font-size: 0.88rem;
             font-weight: 800;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
             color: #e63946;
             letter-spacing: 0.5px;
             font-variant-numeric: tabular-nums;
