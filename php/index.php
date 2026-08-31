@@ -382,14 +382,12 @@
             gap: 16px;
         }
 
-        .field,
-        .check-field {
+        .field {
             display: grid;
             gap: 8px;
         }
 
-        .field span,
-        .check-field span {
+        .field span {
             font-size: 0.98rem;
             font-weight: 700;
         }
@@ -440,30 +438,106 @@
             padding-left: 46px;
         }
 
-        .check-field {
-            grid-template-columns: 18px 1fr;
-            align-items: start;
-            gap: 10px;
-            padding-top: 6px;
-            color: var(--text);
+        .agree-panel {
+            background: rgba(107, 114, 128, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
         }
 
-        .check-field input {
+        .agree-panel__row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 14px 16px;
+            cursor: pointer;
+        }
+
+        .agree-panel__row input {
             width: 18px;
             height: 18px;
             margin-top: 2px;
+            flex-shrink: 0;
             accent-color: var(--primary);
         }
 
-        .agree-detail-link {
-            margin-left: 4px;
-            color: var(--muted);
+        .agree-panel__row span {
+            font-size: 0.92rem;
             font-weight: 400;
-            text-decoration: underline;
+            line-height: 1.5;
+            color: var(--text);
         }
 
-        .agree-detail-link:hover {
-            color: var(--primary);
+        .agree-panel__row strong {
+            font-weight: 800;
+        }
+
+        .agree-panel__toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            border: 0;
+            border-top: 1px solid rgba(107, 114, 128, 0.15);
+            background: none;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .agree-panel__toggle:hover {
+            color: var(--text);
+        }
+
+        .agree-panel__chevron {
+            width: 14px;
+            height: 14px;
+            color: currentColor;
+            transition: transform 0.2s ease;
+        }
+
+        .agree-panel__toggle[aria-expanded="true"] .agree-panel__chevron {
+            transform: rotate(180deg);
+        }
+
+        .agree-panel__detail {
+            padding: 12px 16px 14px;
+            border-top: 1px solid rgba(107, 114, 128, 0.15);
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .agree-panel__detail-title {
+            margin: 0 0 8px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .agree-panel__detail-block {
+            margin-bottom: 8px;
+        }
+
+        .agree-panel__detail-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .agree-panel__detail-heading {
+            margin: 0 0 2px;
+            font-weight: 700;
+            color: var(--text);
+            opacity: 0.85;
+        }
+
+        .agree-panel__detail-text {
+            margin: 0 0 2px;
+            padding-left: 8px;
+        }
+
+        .agree-panel__detail-text:last-child {
+            margin-bottom: 0;
         }
 
         .btn {
@@ -918,12 +992,40 @@
                         </div>
                     </label>
 
-                    <label class="check-field">
-                        <input type="checkbox" name="agree" required checked>
-                        <span>[필수] 개인정보 수집 및 이용에 동의합니다.
-                            <a class="agree-detail-link" href="https://knockknockplant.co.kr/access.php" target="_blank" rel="noopener noreferrer">자세히 보기</a>
-                        </span>
-                    </label>
+                    <div class="agree-panel">
+                        <label class="agree-panel__row">
+                            <input type="checkbox" name="agree" required checked>
+                            <span><strong>[필수]</strong> 개인정보 수집 및 이용에 동의합니다.</span>
+                        </label>
+                        <button type="button" class="agree-panel__toggle" id="agree-detail-toggle"
+                            aria-expanded="false" aria-controls="agree-detail-panel">
+                            <span>개인정보취급방침 보기</span>
+                            <svg class="agree-panel__chevron" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                        <div class="agree-panel__detail" id="agree-detail-panel" hidden>
+                            <p class="agree-panel__detail-title">개인정보취급방침</p>
+                            <div class="agree-panel__detail-block">
+                                <p class="agree-panel__detail-heading">가. 수집하는 개인정보 항목 및 수집방법</p>
+                                <p class="agree-panel__detail-text">- 신청자 이름, 핸드폰</p>
+                            </div>
+                            <div class="agree-panel__detail-block">
+                                <p class="agree-panel__detail-heading">나. 개인정보의 수집 및 이용목적</p>
+                                <p class="agree-panel__detail-text">수집한 개인정보를 다음의 목적을 위해 활용합니다.</p>
+                                <p class="agree-panel__detail-text">- 담당자들의 전화 상담</p>
+                            </div>
+                            <div class="agree-panel__detail-block">
+                                <p class="agree-panel__detail-heading">다. 수집한 개인정보의 보유 및 이용기간</p>
+                                <p class="agree-panel__detail-text">- 원칙적으로 개인정보 수집 및 이용목적이 달성된 후에는 해당 정보를 지체 없이 파기합니다.</p>
+                            </div>
+                            <div class="agree-panel__detail-block">
+                                <p class="agree-panel__detail-heading">라. 동의 거부권 안내</p>
+                                <p class="agree-panel__detail-text">- 동의를 거부할 경우 신청정보가 제공되지 않습니다.</p>
+                            </div>
+                        </div>
+                    </div>
 
                     <button type="button" id="debug-force-fail-btn" class="btn" style="display:none; background:#666; margin-bottom:10px;">🧪 일부러 실패시키기 (테스트용)</button>
 
@@ -1115,6 +1217,17 @@
         if (nameInput) {
             nameInput.addEventListener('input', () => {
                 nameInput.value = nameInput.value.replace(/[0-9]/g, '');
+            });
+        }
+
+        const agreeDetailToggle = document.querySelector('#agree-detail-toggle');
+        const agreeDetailPanel = document.querySelector('#agree-detail-panel');
+
+        if (agreeDetailToggle && agreeDetailPanel) {
+            agreeDetailToggle.addEventListener('click', () => {
+                const isExpanded = agreeDetailToggle.getAttribute('aria-expanded') === 'true';
+                agreeDetailToggle.setAttribute('aria-expanded', String(!isExpanded));
+                agreeDetailPanel.hidden = isExpanded;
             });
         }
 
