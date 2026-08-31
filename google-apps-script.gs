@@ -48,6 +48,36 @@ function getOrCreateIntegratedSheet(spreadsheet) {
     return sheet;
 }
 
+// 같은 연락처로 이 기간(일) 안에 신청한 기록이 있으면 재신청을 막는다
+const DUPLICATE_BLOCK_DAYS = 7;
+
+// 통합 시트에서 같은 연락처의 가장 최근 신청시간을 찾는다. 없으면 null.
+function findMostRecentApplicationDate(spreadsheet, phone) {
+    const sheet = getOrCreateIntegratedSheet(spreadsheet);
+    const lastRow = sheet.getLastRow();
+
+    if (lastRow < 2) {
+        return null;
+    }
+
+    const phoneColumn = sheet.getRange(2, 4, lastRow - 1, 1);
+    const matches = phoneColumn.createTextFinder(phone).matchEntireCell(true).findAll();
+
+    if (matches.length === 0) {
+        return null;
+    }
+
+    let latest = null;
+    matches.forEach((cell) => {
+        const timestamp = sheet.getRange(cell.getRow(), 2).getValue();
+        if (timestamp instanceof Date && (!latest || timestamp > latest)) {
+            latest = timestamp;
+        }
+    });
+
+    return latest;
+}
+
 // 정상 저장 경로가 실패했을 때 최후의 수단으로 호출. 이 함수마저 실패하면 콘솔 로그만 남기고 넘어간다.
 function logToFallbackSheet(spreadsheet, name, phone, selectedType, reason) {
     try {
@@ -111,6 +141,14 @@ function doPost(e) {
         }
 
         const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+
+        const lastApplicationDate = findMostRecentApplicationDate(spreadsheet, phone);
+        if (lastApplicationDate) {
+            const daysSinceLastApplication = (Date.now() - lastApplicationDate.getTime()) / (1000 * 60 * 60 * 24);
+            if (daysSinceLastApplication < DUPLICATE_BLOCK_DAYS) {
+                return ContentService.createTextOutput('already_applied');
+            }
+        }
 
         if (forceFail) {
             // 실제 선택한 상담유형(selectedType)은 그대로 두고 정상 저장만 건너뛰어 유실 상황을 재현한다

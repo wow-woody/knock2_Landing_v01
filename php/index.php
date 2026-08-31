@@ -993,7 +993,7 @@
                 </div>
 
                 <form class="consult-form" id="consult-form"
-                    action="https://script.google.com/macros/s/AKfycbyCmqqGzdUqBZTomBtYAOwU3i3z53bPDG5s-_fwMwgULPFjK2F9sHS2AgM6nWgVjehP/exec"
+                    action="https://script.google.com/macros/s/AKfycbypj4_a2Rzg7gCADLwba_OsIbjC5ltwDjnhBQWp5jRfFo2pIB-MReECKiQE6fSE6RpO/exec"
                     method="post">
                     <input type="hidden" id="selected-type" name="selectedType" value="국산 정품 임플란트">
                     <!-- 서버에서 같은 IP의 5분 이내 재신청을 막기 위해 JS가 조회한 공인 IP를 채워넣는 값 -->
@@ -1622,7 +1622,17 @@
                 return;
             }
 
-            // rate_limited를 제외한 나머지(성공/서버 내부 오류/네트워크 오류)는 결과와 무관하게 완료 메시지를 유지한다.
+            if (resultText === 'already_applied') {
+                showModal({
+                    icon: '⚠️',
+                    title: '이미 상담 신청을 하셨습니다',
+                    message: '동일한 연락처는 1주일 후에 다시 신청하실 수 있습니다.',
+                    tone: 'warning',
+                });
+                return;
+            }
+
+            // rate_limited/already_applied를 제외한 나머지(성공/서버 내부 오류/네트워크 오류)는 결과와 무관하게 완료 메시지를 유지한다.
             // 서버 내부 오류는 doPost에서 DB로스 시트로 백업되므로 신청 데이터 자체는 유실되지 않는다.
             form.reset();
             syncSelectedType();

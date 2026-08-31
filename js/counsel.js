@@ -525,7 +525,17 @@ async function submitConsultForm(event) {
         return;
     }
 
-    // rate_limited를 제외한 나머지(성공/서버 내부 오류/네트워크 오류)는 결과와 무관하게 완료 메시지를 유지한다.
+    if (resultText === 'already_applied') {
+        showModal({
+            icon: '⚠️',
+            title: '이미 상담 신청을 하셨습니다',
+            message: '동일한 연락처는 1주일 후에 다시 신청하실 수 있습니다.',
+            tone: 'warning',
+        });
+        return;
+    }
+
+    // rate_limited/already_applied를 제외한 나머지(성공/서버 내부 오류/네트워크 오류)는 결과와 무관하게 완료 메시지를 유지한다.
     // 서버 내부 오류는 doPost에서 DB로스 시트로 백업되므로 신청 데이터 자체는 유실되지 않는다.
     form.reset();
     syncSelectedType();
