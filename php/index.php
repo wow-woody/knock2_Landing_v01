@@ -570,7 +570,7 @@
         .agree-panel__detail {
             padding: 12px 16px 14px;
             border-top: 1px solid rgba(107, 114, 128, 0.15);
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 251, 251, 0.5);
             color: var(--muted);
             font-size: 0.78rem;
         }
