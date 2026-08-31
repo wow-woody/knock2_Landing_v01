@@ -1547,7 +1547,6 @@
             const selectedType = String((selectedTypeInput && selectedTypeInput.value) || '').trim() || '국산 정품 임플란트';
 
             formData.set('selectedType', selectedType);
-            formData.set('phone', phone);
 
             if (!name || !phone) {
                 showModal({
