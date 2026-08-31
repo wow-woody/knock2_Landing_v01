@@ -605,19 +605,6 @@
             color: var(--muted);
         }
 
-        .hidden-frame {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            border: 0;
-            padding: 0;
-            margin: 0;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            clip-path: inset(50%);
-            white-space: nowrap;
-        }
-
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -659,11 +646,14 @@
         .modal-icon {
             width: 56px;
             height: 56px;
+            box-sizing: border-box;
             margin: 0 auto 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding-bottom: 8px;
             font-size: 1.8rem;
+            line-height: 1;
             background: var(--surface-soft);
             border-radius: 999px;
         }
@@ -902,7 +892,7 @@
 
                 <form class="consult-form" id="consult-form"
                     action="https://script.google.com/macros/s/AKfycbyCmqqGzdUqBZTomBtYAOwU3i3z53bPDG5s-_fwMwgULPFjK2F9sHS2AgM6nWgVjehP/exec"
-                    method="post" target="submit-frame">
+                    method="post">
                     <input type="hidden" id="selected-type" name="selectedType" value="국산 정품 임플란트">
                     <!-- 서버에서 같은 IP의 5분 이내 재신청을 막기 위해 JS가 조회한 공인 IP를 채워넣는 값 -->
                     <input type="hidden" id="client-ip" name="ip" value="">
@@ -939,7 +929,6 @@
 
                     <button class="btn" type="submit">상담 신청하기</button>
                 </form>
-                <iframe name="submit-frame" class="hidden-frame" title="상담 신청 전송 프레임"></iframe>
             </section>
 
             <section class="recent-applicants" aria-label="실시간 상담 신청 현황">
@@ -972,14 +961,12 @@
     <script>
         // ==== js/counsel.js ====
         const form = document.querySelector('#consult-form');
-        const submitFrame = document.querySelector('iframe[name="submit-frame"]');
         const submitButton = form ? form.querySelector('button[type="submit"]') : null;
         const selectedTypeInput = document.querySelector('#selected-type');
         const choiceInputs = document.querySelectorAll('input[name="choice"]');
         const consultationList = document.querySelector('#consultation-list');
         const consultationListEmpty = document.querySelector('#consultation-list-empty');
         const API_URL = form ? form.getAttribute('action') : '';
-        const CONSULTATION_CACHE_KEY = 'consultationListCache';
         const phoneInput = document.querySelector('input[name="phone"]');
         const nameInput = document.querySelector('input[name="name"]');
         const countdownTimerEl = document.querySelector('#countdown-timer');
@@ -1189,7 +1176,7 @@
                 return digits;
             }
 
-            return `${digits.slice(0, 3)}-****-${digits.slice(-4)}`;
+            return `${digits.slice(0, 3)}-${digits.slice(3, 4)}***-****`;
         }
 
         function formatTimestamp(value) {
@@ -1200,7 +1187,7 @@
             }
 
             const pad = (n) => String(n).padStart(2, '0');
-            return `${pad(date.getMonth() + 1)}/${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+            return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
         }
 
         function buildApplicantRow(item) {
@@ -1304,44 +1291,47 @@
             }, 1500);
         }
 
-        function readCachedConsultationList() {
-            try {
-                const cached = sessionStorage.getItem(CONSULTATION_CACHE_KEY);
-                const items = cached ? JSON.parse(cached) : null;
-                return Array.isArray(items) ? items : null;
-            } catch (error) {
-                return null;
-            }
+        // 실시간 신청 현황은 실제 시트 데이터가 아니라 가상의 신청자 목록을 코드로 생성해서 보여준다.
+        const FAKE_APPLICANT_COUNT = 30;
+        const FAKE_APPLICANT_SURNAMES = ['김', '이', '박', '최', '정', '강', '조', '윤', '장', '임'];
+        const FAKE_APPLICANT_GIVEN_NAMES = [
+            '민준', '서연', '도윤', '하은', '시우', '지우', '예준', '수아', '주원', '다은',
+            '지호', '서준', '유진', '현우', '소율', '민서', '우진', '채원', '준서', '아린',
+        ];
+
+        function randomItem(list) {
+            return list[Math.floor(Math.random() * list.length)];
         }
 
-        function writeCachedConsultationList(items) {
-            try {
-                sessionStorage.setItem(CONSULTATION_CACHE_KEY, JSON.stringify(items));
-            } catch (error) {
-                // 저장 실패는 무시 (프라이빗 브라우징 등)
+        function generateFakePhoneDigits() {
+            let digits = '010';
+            for (let i = 0; i < 8; i += 1) {
+                digits += String(Math.floor(Math.random() * 10));
             }
+            return digits;
         }
 
-        async function loadConsultationList() {
-            if (!consultationList || !API_URL) {
+        function generateFakeApplicants(count) {
+            const todayTimestamp = new Date().toISOString();
+            const items = [];
+
+            for (let i = 0; i < count; i += 1) {
+                items.push({
+                    timestamp: todayTimestamp,
+                    name: randomItem(FAKE_APPLICANT_SURNAMES) + randomItem(FAKE_APPLICANT_GIVEN_NAMES),
+                    phone: generateFakePhoneDigits(),
+                });
+            }
+
+            return items;
+        }
+
+        function loadConsultationList() {
+            if (!consultationList) {
                 return;
             }
 
-            // 직전에 불러온 목록이 있으면 fetch 응답을 기다리지 않고 즉시 먼저 보여준다.
-            const cachedItems = readCachedConsultationList();
-            if (cachedItems) {
-                startApplicantRoll(cachedItems);
-            }
-
-            try {
-                const response = await fetch(API_URL);
-                const data = await response.json();
-                const items = Array.isArray(data.items) ? data.items : [];
-                writeCachedConsultationList(items);
-                startApplicantRoll(items);
-            } catch (error) {
-                console.error('load_consultation_list_error', error);
-            }
+            startApplicantRoll(generateFakeApplicants(FAKE_APPLICANT_COUNT));
         }
 
         const appModal = document.querySelector('#app-modal');
@@ -1398,9 +1388,10 @@
 
         let waitingForResponse = false;
 
-        function submitConsultForm(event) {
+        async function submitConsultForm(event) {
+            event.preventDefault();
+
             if (waitingForResponse) {
-                event.preventDefault();
                 return;
             }
 
@@ -1430,7 +1421,6 @@
                     message: '올바른 연락처를 입력해주세요.',
                     tone: 'warning',
                 });
-                event.preventDefault();
                 return;
             }
 
@@ -1441,7 +1431,6 @@
                     message: '이름에 사용할 수 없는 단어가 포함되어 있습니다.',
                     tone: 'warning',
                 });
-                event.preventDefault();
                 return;
             }
 
@@ -1452,7 +1441,6 @@
                     message: '개인정보 수집 및 이용에 동의해주세요.',
                     tone: 'warning',
                 });
-                event.preventDefault();
                 return;
             }
 
@@ -1461,6 +1449,51 @@
                 submitButton.disabled = true;
                 submitButton.textContent = '전송 중...';
             }
+
+            let resultText = '';
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+                resultText = (await response.text()).trim();
+            } catch (error) {
+                console.error('submit_consult_form_error', error);
+                resultText = 'network_error';
+            }
+
+            waitingForResponse = false;
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = '상담 신청하기';
+            }
+
+            if (resultText === 'rate_limited') {
+                showModal({
+                    icon: '⚠️',
+                    title: '이미 상담 신청을 하셨습니다',
+                    message: '잠시 후 다시 시도해주세요.',
+                    tone: 'warning',
+                });
+                return;
+            }
+
+            // rate_limited를 제외한 나머지(성공/서버 내부 오류/네트워크 오류)는 결과와 무관하게 완료 메시지를 유지한다.
+            // 서버 내부 오류는 doPost에서 DB로스 시트로 백업되므로 신청 데이터 자체는 유실되지 않는다.
+            form.reset();
+            syncSelectedType();
+            loadConsultationList();
+
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                event: 'form_submit_success'
+            });
+
+            showModal({
+                icon: '✅',
+                title: '상담 신청이 완료되었습니다!',
+                message: '빠른 시간 안에 상담원이 연락드리겠습니다.',
+            });
         }
 
         choiceInputs.forEach((choiceInput) => {
@@ -1472,35 +1505,6 @@
 
         if (form) {
             form.addEventListener('submit', submitConsultForm);
-        }
-
-        if (submitFrame) {
-            submitFrame.addEventListener('load', () => {
-                if (!waitingForResponse) {
-                    return;
-                }
-
-                waitingForResponse = false;
-                form.reset();
-                syncSelectedType();
-                loadConsultationList();
-
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = '상담 신청하기';
-                }
-
-                window.dataLayer = window.dataLayer || [];
-                window.dataLayer.push({
-                    event: 'form_submit_success'
-                });
-
-                showModal({
-                    icon: '✅',
-                    title: '상담 신청이 완료되었습니다!',
-                    message: '빠른 시간 안에 상담원이 연락드리겠습니다.',
-                });
-            });
         }
 
         // 임시 테스트 코드: DB로스 유실 테스트용. 테스트 끝나면 이 블록과 현재 페이지의 #debug-force-fail-btn, #force-fail-flag 삭제할 것
