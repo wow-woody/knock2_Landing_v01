@@ -64,10 +64,14 @@ textarea {
 }
 
 .countdown-timer {
+    display: inline-block;
+    min-width: 76px;
     font-size: 0.88rem;
     font-weight: 800;
     color: #e63946;
     letter-spacing: 0.5px;
+    font-variant-numeric: tabular-nums;
+    text-align: left;
 }
 
 .back-btn {
@@ -86,7 +90,7 @@ textarea {
     color: var(--text);
     font-size: 0.92rem;
     font-weight: 700;
-    box-shadow: 0 10px 22px rgba(26, 29, 41,0.06);
+    box-shadow: 0 10px 22px rgba(26, 29, 41, 0.06);
     text-decoration: none;
     transition:
         transform 0.2s ease,
@@ -107,7 +111,7 @@ textarea {
 .back-btn:hover {
     transform: translateY(-1px);
     border-color: var(--primary);
-    box-shadow: 0 12px 24px rgba(49, 130, 246,0.12);
+    box-shadow: 0 12px 24px rgba(49, 130, 246, 0.12);
 }
 
 .hero,
@@ -241,7 +245,7 @@ textarea {
     text-align: center;
     gap: 4px;
     padding: 20px 10px;
-    border: 2px solid var(--line);
+    border: 1px solid var(--line);
     border-radius: 20px;
     background: #fff;
     cursor: pointer;
@@ -253,8 +257,7 @@ textarea {
 
 .choice-card:hover {
     transform: translateY(-1px);
-    box-shadow: 0 10px 20px rgba(26, 29, 41,0.06);
-    
+    box-shadow: 0 10px 20px rgba(26, 29, 41, 0.06);
 }
 
 .choice-card__title {
@@ -315,8 +318,8 @@ textarea {
 
 .field input:focus {
     border-width: 3px;
-    border-color: rgba(49, 130, 246,0.75);
-    box-shadow: 0 0 0 4px rgba(49, 130, 246,0.12);
+    border-color: rgba(49, 130, 246, 0.75);
+    box-shadow: 0 0 0 4px rgba(49, 130, 246, 0.12);
 }
 
 .field input::placeholder {
@@ -432,7 +435,7 @@ textarea {
     transition: transform 0.2s ease;
 }
 
-.agree-panel__toggle[aria-expanded="true"] .agree-panel__chevron {
+.agree-panel__toggle[aria-expanded='true'] .agree-panel__chevron {
     transform: rotate(180deg);
 }
 
@@ -488,7 +491,7 @@ textarea {
     color: #fff;
     font-size: 1rem;
     font-weight: 800;
-    box-shadow: 0 16px 26px rgba(49, 130, 246,0.25);
+    box-shadow: 0 16px 26px rgba(49, 130, 246, 0.25);
     cursor: pointer;
 }
 
@@ -696,7 +699,7 @@ textarea {
 #choice-full:checked ~ .page .choice-list label[for='choice-full'] {
     border-width: 3px;
     border-color: var(--primary);
-    box-shadow: 0 10px 22px rgba(49, 130, 246,0.12);
+    box-shadow: 0 10px 22px rgba(49, 130, 246, 0.12);
 }
 
 #choice-korean:checked ~ .page .choice-list label[for='choice-korean'] .choice-card__title,

@@ -196,10 +196,14 @@
         }
 
         .countdown-timer {
+            display: inline-block;
+            min-width: 76px;
             font-size: 0.88rem;
             font-weight: 800;
             color: #e63946;
             letter-spacing: 0.5px;
+            font-variant-numeric: tabular-nums;
+            text-align: left;
         }
 
         .back-btn {
@@ -373,7 +377,7 @@
             text-align: center;
             gap: 4px;
             padding: 20px 10px;
-            border: 2px solid var(--line);
+            border: 1px solid var(--line);
             border-radius: 20px;
             background: #fff;
             cursor: pointer;
