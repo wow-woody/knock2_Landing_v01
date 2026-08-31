@@ -312,7 +312,18 @@
         }
 
         .choice-heading {
-            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            width: fit-content;
+            margin: 16px auto 0;
+            background: #fff3cd;
+            color: var(--primary-strong);
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 7px 16px;
+            border-radius: 999px;
         }
 
         .hero__title--default,
@@ -325,6 +336,12 @@
 
         .hero__title--default {
             display: block;
+        }
+
+        .hero__title--sub {
+            margin-top: -6px;
+            font-size: 1.4rem;
+            font-weight: 500;
         }
 
         .hero__desc {
@@ -347,14 +364,15 @@
         .choice-list {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 14px;
+            gap: 8px;
         }
 
         .choice-card {
             display: grid;
+            align-content: center;
             text-align: center;
             gap: 4px;
-            padding: 18px;
+            padding: 20px 10px;
             border: 2px solid var(--line);
             border-radius: 20px;
             background: #fff;
@@ -371,14 +389,14 @@
         }
 
         .choice-card__title {
-            font-size: 0.983rem;
+            font-size: 1.05rem;
             font-weight: 800;
         }
 
         .choice-card__text {
             color: var(--muted);
-            line-height: 1.6;
-            font-size: 0.88rem;
+            /* line-height: 1.6; */
+            font-size: 1.05rem;
         }
 
         .section-heading {
@@ -427,6 +445,7 @@
         }
 
         .field input:focus {
+            border-width: 3px;
             border-color: rgba(49, 130, 246, 0.75);
             box-shadow: 0 0 0 4px rgba(49, 130, 246, 0.12);
         }
@@ -473,11 +492,37 @@
         }
 
         .agree-panel__row input {
+            appearance: none;
+            -webkit-appearance: none;
             width: 18px;
             height: 18px;
             margin-top: 2px;
             flex-shrink: 0;
-            accent-color: var(--primary);
+            position: relative;
+            border: 2px solid var(--line);
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            transition:
+                border-color 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .agree-panel__row input:checked {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .agree-panel__row input:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 8px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            transform: translate(-50%, -60%) rotate(45deg);
         }
 
         .agree-panel__row span {
@@ -777,6 +822,7 @@
         #choice-korean:checked~.page .choice-list label[for='choice-korean'],
         #choice-osstem:checked~.page .choice-list label[for='choice-osstem'],
         #choice-full:checked~.page .choice-list label[for='choice-full'] {
+            border-width: 3px;
             border-color: var(--primary);
             box-shadow: 0 10px 22px rgba(49, 130, 246, 0.12);
         }
@@ -907,10 +953,11 @@
                 </div>
 
                 <div class="hero__top">
-                    <h1 class="hero__title hero__title--default">국산 정품 임플란트 개당 20만 원</h1>
+                    <h1 class="hero__title hero__title--default">국산 정품 임플란트</h1>
+                    <h1 class="hero__title hero__title--default hero__title--sub">(개당 20만 원)</h1>
                     <p class="hero__desc hero__desc--default">뼈이식ㆍ 맞춤 지대주ㆍ지르코니아 보철 포함</p>
 
-                    <h2 class="hero__title choice-heading">원하시는 항목을 선택해 주세요</h2>
+                    <h2 class="choice-heading">👉 원하시는 항목을 선택해 주세요</h2>
                 </div>
 
                 <div class="choice-list" aria-label="상담 종류 선택">
