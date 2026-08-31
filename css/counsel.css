@@ -761,13 +761,6 @@ textarea {
         padding: 16px;
     }
 
-    .hero__title--default,
-    .hero__title--korean,
-    .hero__title--osstem,
-    .hero__title--full {
-        font-size: 2.1rem;
-    }
-
     .recent-applicants-head,
     .recent-applicants-row {
         font-size: 0.74rem;
