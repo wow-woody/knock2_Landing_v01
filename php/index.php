@@ -310,6 +310,10 @@
             font-size: 2.1rem;
         }
 
+        .hero__title--default {
+            display: block;
+        }
+
         .hero__desc {
             margin: 0;
             color: var(--muted);
@@ -321,7 +325,10 @@
         .hero__desc--osstem,
         .hero__desc--full {
             display: none;
+        }
 
+        .hero__desc--default {
+            display: block;
         }
 
         .choice-list {
@@ -752,48 +759,6 @@
 
         .modal-card .btn {
             min-height: 48px;
-        }
-
-        #choice-korean:checked~.page .hero__title--korean,
-        #choice-korean:checked~.page .hero__desc--korean {
-            display: block;
-        }
-
-        #choice-korean:checked~.page .hero__title--default,
-        #choice-korean:checked~.page .hero__desc--default,
-        #choice-korean:checked~.page .hero__title--osstem,
-        #choice-korean:checked~.page .hero__desc--osstem,
-        #choice-korean:checked~.page .hero__title--full,
-        #choice-korean:checked~.page .hero__desc--full {
-            display: none;
-        }
-
-        #choice-osstem:checked~.page .hero__title--osstem,
-        #choice-osstem:checked~.page .hero__desc--osstem {
-            display: block;
-        }
-
-        #choice-osstem:checked~.page .hero__title--default,
-        #choice-osstem:checked~.page .hero__desc--default,
-        #choice-osstem:checked~.page .hero__title--korean,
-        #choice-osstem:checked~.page .hero__desc--korean,
-        #choice-osstem:checked~.page .hero__title--full,
-        #choice-osstem:checked~.page .hero__desc--full {
-            display: none;
-        }
-
-        #choice-full:checked~.page .hero__title--full,
-        #choice-full:checked~.page .hero__desc--full {
-            display: block;
-        }
-
-        #choice-full:checked~.page .hero__title--default,
-        #choice-full:checked~.page .hero__desc--default,
-        #choice-full:checked~.page .hero__title--korean,
-        #choice-full:checked~.page .hero__desc--korean,
-        #choice-full:checked~.page .hero__title--osstem,
-        #choice-full:checked~.page .hero__desc--osstem {
-            display: none;
         }
 
         #choice-korean:checked~.page .choice-list label[for='choice-korean'],
