@@ -40,7 +40,10 @@ const FORBIDDEN_NAME_WORDS = [
     'ㅄ',
     '병신',
     '시브랄',
+    '살인',
     '살인자',
+    '니금마',
+    '뒤져',
     '돌팔이',
     '돌아이',
     '미친',
@@ -54,6 +57,7 @@ const FORBIDDEN_NAME_WORDS = [
     '썅놈',
     '싸가지',
     '좆까',
+    '좃까',
 ];
 
 function containsForbiddenWord(value) {
