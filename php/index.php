@@ -931,8 +931,8 @@
 
     <!-- ============ counsel.html 영역 ============ -->
     <div id="view-counsel" class="view" hidden>
-        <input class="choice-switch" type="radio" name="choice" id="choice-korean" value="국산 정품 임플란트" checked>
-        <input class="choice-switch" type="radio" name="choice" id="choice-osstem" value="오스템 임플란트">
+        <input class="choice-switch" type="radio" name="choice" id="choice-korean" value="1개~2개 임플란트" checked>
+        <input class="choice-switch" type="radio" name="choice" id="choice-osstem" value="여러 개 임플란트">
         <input class="choice-switch" type="radio" name="choice" id="choice-full" value="전체 임플란트">
 
         <main class="page">
@@ -988,7 +988,7 @@
                 <form class="consult-form" id="consult-form"
                     action="https://script.google.com/macros/s/AKfycbz9_l4Jcc27zwgzzE29pEPw48MqjNypo4cMip608r42FWhQB1Hr6CEsIoG0SSAjwdIa/exec"
                     method="post">
-                    <input type="hidden" id="selected-type" name="selectedType" value="국산 정품 임플란트">
+                    <input type="hidden" id="selected-type" name="selectedType" value="1개~2개 임플란트">
                     <!-- 서버에서 같은 IP의 5분 이내 재신청을 막기 위해 JS가 조회한 공인 IP를 채워넣는 값 -->
                     <input type="hidden" id="client-ip" name="ip" value="">
                     <input type="hidden" id="force-fail-flag" name="forceFail" value="0">
@@ -1290,7 +1290,7 @@
             }
 
             const checkedChoice = document.querySelector('input[name="choice"]:checked');
-            selectedTypeInput.value = checkedChoice ? checkedChoice.value : '국산 정품 임플란트';
+            selectedTypeInput.value = checkedChoice ? checkedChoice.value : '1개~2개 임플란트';
         }
 
         function maskName(value) {
@@ -1537,7 +1537,7 @@
             const name = String(formData.get('name') || '').trim();
             const phone = normalizePhone(String(formData.get('phone') || '').trim());
             const agree = formData.get('agree') === 'on';
-            const selectedType = String((selectedTypeInput && selectedTypeInput.value) || '').trim() || '국산 정품 임플란트';
+            const selectedType = String((selectedTypeInput && selectedTypeInput.value) || '').trim() || '1개~2개 임플란트';
 
             formData.set('selectedType', selectedType);
 

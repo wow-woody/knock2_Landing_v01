@@ -205,7 +205,7 @@ function syncSelectedType() {
     }
 
     const checkedChoice = document.querySelector('input[name="choice"]:checked');
-    selectedTypeInput.value = checkedChoice ? checkedChoice.value : '국산 정품 임플란트';
+    selectedTypeInput.value = checkedChoice ? checkedChoice.value : '1개~2개 임플란트';
 }
 
 function maskName(value) {
@@ -447,7 +447,7 @@ async function submitConsultForm(event) {
     const name = String(formData.get('name') || '').trim();
     const phone = normalizePhone(String(formData.get('phone') || '').trim());
     const agree = formData.get('agree') === 'on';
-    const selectedType = String((selectedTypeInput && selectedTypeInput.value) || '').trim() || '국산 정품 임플란트';
+    const selectedType = String((selectedTypeInput && selectedTypeInput.value) || '').trim() || '1개~2개 임플란트';
 
     formData.set('selectedType', selectedType);
 
