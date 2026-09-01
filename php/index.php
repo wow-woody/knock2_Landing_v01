@@ -439,7 +439,7 @@
             width: 100%;
             min-height: 54px;
             padding: 0 16px;
-            border: 1px solid var(--line);
+            border: 3px solid var(--line);
             border-radius: 16px;
             background: #fff;
             color: var(--text);
@@ -450,7 +450,6 @@
         }
 
         .field input:focus {
-            border-width: 3px;
             border-color: rgba(49, 130, 246, 0.75);
             box-shadow: 0 0 0 4px rgba(49, 130, 246, 0.12);
         }
