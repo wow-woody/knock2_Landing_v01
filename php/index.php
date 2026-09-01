@@ -439,7 +439,7 @@
             width: 100%;
             min-height: 54px;
             padding: 0 16px;
-            border: 3px solid var(--line);
+            border: 2px solid var(--line);
             border-radius: 16px;
             background: #fff;
             color: var(--text);
