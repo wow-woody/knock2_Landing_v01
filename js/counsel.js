@@ -155,11 +155,23 @@ function formatPhoneInput(value) {
         return digits;
     }
 
-    if (digits.length <= prefixLength + 4) {
+    // 휴대폰(010)은 항상 4자리+4자리(총 11자리)
+    if (digits.startsWith('010')) {
+        if (digits.length <= prefixLength + 4) {
+            return `${digits.slice(0, prefixLength)}-${digits.slice(prefixLength)}`;
+        }
+
+        return `${digits.slice(0, prefixLength)}-${digits.slice(prefixLength, prefixLength + 4)}-${digits.slice(prefixLength + 4)}`;
+    }
+
+    // 그 외 지역번호(031~064)는 국번이 3자리(총 10자리, XXX-XXX-XXXX)인 경우와 4자리(총 11자리, XXX-XXXX-XXXX)인 경우가 둘 다 있다
+    const middleLength = digits.length >= prefixLength + 8 ? 4 : 3;
+
+    if (digits.length <= prefixLength + middleLength) {
         return `${digits.slice(0, prefixLength)}-${digits.slice(prefixLength)}`;
     }
 
-    return `${digits.slice(0, prefixLength)}-${digits.slice(prefixLength, prefixLength + 4)}-${digits.slice(prefixLength + 4)}`;
+    return `${digits.slice(0, prefixLength)}-${digits.slice(prefixLength, prefixLength + middleLength)}-${digits.slice(prefixLength + middleLength)}`;
 }
 
 if (phoneInput) {
