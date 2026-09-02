@@ -201,6 +201,19 @@ function normalizePhone(value) {
     return value.replace(/[^0-9]/g, '');
 }
 
+// 자릿수가 끝까지 안 채워진 번호(예: 010-1234-56) 차단
+function isCompletePhoneNumber(phone) {
+    if (phone.startsWith('02')) {
+        return phone.length === 9 || phone.length === 10;
+    }
+
+    if (phone.startsWith('010')) {
+        return phone.length === 11;
+    }
+
+    return phone.length === 10 || phone.length === 11;
+}
+
 // 장난번호(예: 010-4444-4444, 010-1234-5678) 차단
 function isSuspiciousPhoneNumber(phone) {
     if (phone.length < 8) {
@@ -487,7 +500,7 @@ async function submitConsultForm(event) {
         return;
     }
 
-    if (isSuspiciousPhoneNumber(phone)) {
+    if (!isCompletePhoneNumber(phone) || isSuspiciousPhoneNumber(phone)) {
         showModal({
             icon: '⚠️',
             title: '연락처를 확인해주세요',
