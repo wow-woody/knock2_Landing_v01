@@ -1217,10 +1217,24 @@
                 digits += digit;
             }
 
-            // 서울(02)은 지역번호가 2자리라 나머지 지역번호/휴대폰(3자리)와 분리해서 처리
-            const isSeoul = digits.startsWith('02');
-            const prefixLength = isSeoul ? 2 : 3;
-            digits = isSeoul ? digits.slice(0, 10) : digits;
+            // 서울(02)은 국번이 3자리(총 9자리, 02-XXX-XXXX)인 경우와 4자리(총 10자리, 02-XXXX-XXXX)인 경우가 둘 다 있다
+            if (digits.startsWith('02')) {
+                digits = digits.slice(0, 10);
+
+                if (digits.length <= 2) {
+                    return digits;
+                }
+
+                const middleLength = digits.length >= 10 ? 4 : 3;
+
+                if (digits.length <= 2 + middleLength) {
+                    return `02-${digits.slice(2)}`;
+                }
+
+                return `02-${digits.slice(2, 2 + middleLength)}-${digits.slice(2 + middleLength)}`;
+            }
+
+            const prefixLength = 3;
 
             if (digits.length <= prefixLength) {
                 return digits;
